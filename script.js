@@ -1,157 +1,215 @@
-let students = [
-{
-name:"Ali",
-className:"10th",
-marks:88,
-grade:"A"
-},
-{
-name:"Sara",
-className:"9th",
-marks:76,
-grade:"B"
-},
-{
-name:"Ahmed",
-className:"10th",
-marks:92,
-grade:"A+"
-}
+// =====================================
+// Student Performance Portal
+// Week 2 - script.js
+// =====================================
+
+// ------------------------------
+// Student Data
+// ------------------------------
+
+const students = [
+
+    {
+        name: "Ali Ahmed",
+        className: "BSCS",
+        marks: 85,
+        grade: "A"
+    },
+
+    {
+        name: "Sara Khan",
+        className: "BSIT",
+        marks: 72,
+        grade: "B"
+    },
+
+    {
+        name: "Usman Ali",
+        className: "BSSE",
+        marks: 58,
+        grade: "C"
+    },
+
+    {
+        name: "Ayesha Noor",
+        className: "BBA",
+        marks: 91,
+        grade: "A+"
+    },
+
+    {
+        name: "Hamza Tariq",
+        className: "BSCS",
+        marks: 66,
+        grade: "B"
+    }
+
 ];
 
-function loadDashboard(){
+// ------------------------------
+// Login Form
+// ------------------------------
 
-let table =
-document.getElementById("studentTable");
+const loginForm = document.getElementById("loginForm");
 
-table.innerHTML = "";
+if (loginForm) {
 
-students.forEach(student => {
+    loginForm.addEventListener("submit", function (e) {
 
-table.innerHTML += `
-<tr>
-<td>${student.name}</td>
-<td>${student.className}</td>
-<td>${student.marks}</td>
-<td>${student.grade}</td>
-</tr>
-`;
+        e.preventDefault();
 
-});
+        const username =
+            document.getElementById("username").value.trim();
 
-document.getElementById("totalStudents").innerText =
-students.length;
+        const password =
+            document.getElementById("password").value.trim();
 
-let total =
-students.reduce((sum,s)=>sum+s.marks,0);
+        // Validation
 
-document.getElementById("averageMarks").innerText =
-Math.round(total/students.length) + "%";
+        if (username === "" || password === "") {
 
-document.getElementById("passedStudents").innerText =
-students.filter(s=>s.marks>=50).length;
+            alert("Please fill all fields.");
+
+            return;
+
+        }
+
+        // Demo Login
+
+        if (username === "admin" && password === "1234") {
+
+            alert("Login Successful!");
+
+            document.getElementById("dashboard")
+                .scrollIntoView({
+                    behavior: "smooth"
+                });
+
+        }
+
+        else {
+
+            alert("Invalid Username or Password");
+
+        }
+
+    });
+
+}
+
+// ------------------------------
+// Load Dashboard
+// ------------------------------
+
+function loadDashboard() {
+
+    const table =
+        document.getElementById("studentTable");
+
+    if (!table) return;
+
+    table.innerHTML = "";
+
+    let totalMarks = 0;
+    let passedStudents = 0;
+
+    students.forEach(student => {
+
+        totalMarks += student.marks;
+
+        if (student.marks >= 50) {
+
+            passedStudents++;
+
+        }
+
+        table.innerHTML += `
+
+        <tr>
+
+            <td>${student.name}</td>
+
+            <td>${student.className}</td>
+
+            <td>${student.marks}</td>
+
+            <td>${student.grade}</td>
+
+        </tr>
+
+        `;
+
+    });
+
+    document.getElementById("totalStudents").innerText =
+        students.length;
+
+    document.getElementById("averageMarks").innerText =
+        (totalMarks / students.length).toFixed(1) + "%";
+
+    document.getElementById("passedStudents").innerText =
+        passedStudents;
 
 }
 
-loadDashboard();
+// ------------------------------
+// Search Student
+// ------------------------------
 
-document
-.getElementById("loginForm")
-.addEventListener("submit",function(e){
+const searchInput =
+    document.getElementById("searchInput");
 
-e.preventDefault();
+if (searchInput) {
 
-let username =
-document.getElementById("username").value;
+    searchInput.addEventListener("keyup", function () {
 
-let password =
-document.getElementById("password").value;
+        const value =
+            this.value.toLowerCase();
 
-if(username==="" || password===""){
-alert("Please fill all fields");
-return;
-}
+        const rows =
+            document.querySelectorAll("#studentTable tr");
 
-alert("Login Successful!");
+        rows.forEach(row => {
 
-});
+            const text =
+                row.innerText.toLowerCase();
 
-document
-.getElementById("reportForm")
-.addEventListener("submit",function(e){
+            row.style.display =
+                text.includes(value)
+                ? ""
+                : "none";
 
-e.preventDefault();
+        });
 
-let name =
-document.getElementById("studentName").value;
-
-let className =
-document.getElementById("studentClass").value;
-
-let marks =
-document.getElementById("studentMarks").value;
-
-if(name==="" || className==="" || marks===""){
-alert("Fill all fields");
-return;
-}
-
-let grade="";
-
-if(marks>=90)
-grade="A+";
-else if(marks>=80)
-grade="A";
-else if(marks>=70)
-grade="B";
-else
-grade="C";
-
-students.push({
-name,
-className,
-marks:Number(marks),
-grade
-});
-
-loadDashboard();
-
-alert("Student Added Successfully");
-
-this.reset();
-
-});
-
-document
-.getElementById("searchInput")
-.addEventListener("keyup",function(){
-
-let value =
-this.value.toLowerCase();
-
-let rows =
-document.querySelectorAll("#studentTable tr");
-
-rows.forEach(row=>{
-
-row.style.display =
-row.innerText.toLowerCase()
-.includes(value)
-? ""
-: "none";
-
-});
-
-});
-
-function sendMessage(){
-alert("Message Sent Successfully!");
-}
-
-function toggleMenu(){
-
-document
-.getElementById("navMenu")
-.classList.toggle("active");
+    });
 
 }
+
+// ------------------------------
+// Mobile Navigation
+// ------------------------------
+
+function toggleMenu() {
+
+    const nav =
+        document.getElementById("navMenu");
+
+    nav.classList.toggle("active");
+
+}
+
+// ------------------------------
+// Contact Button
+// ------------------------------
+
+function sendMessage() {
+
+    alert("Message Sent Successfully!");
+
+}
+
+// ------------------------------
+// Load Data
+// ------------------------------
+
+window.onload = loadDashboard;
